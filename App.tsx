@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { GluestackUIProvider, Text, Box } from '@gluestack-ui/themed';
 
 import {
   useFonts,
@@ -14,12 +14,10 @@ export default function App() {
   });
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {fontsLoaded ? (
+    <GluestackUIProvider>
+      <Box width="100%" flex={1} justifyContent="center" alignItems="center">
         <Text>Open up App.js to start working on your app!</Text>
-      ) : (
-        <View />
-      )}
-    </View>
+      </Box>
+    </GluestackUIProvider>
   );
 }
