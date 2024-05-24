@@ -10,12 +10,16 @@ import {
 export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
-    Roboto_700Bold
-  })
+    Roboto_700Bold,
+  });
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center"}}>
-       {fontsLoaded ?  <Text>Open up App.js to start working on your app!</Text> : <View />}
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {fontsLoaded ? (
+        <Text>Open up App.js to start working on your app!</Text>
+      ) : (
+        <View />
+      )}
     </View>
   );
 }
