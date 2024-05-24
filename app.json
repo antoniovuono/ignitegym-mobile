@@ -2,6 +2,9 @@
   "expo": {
     "name": "ignitegym-mobile",
     "slug": "ignitegym-mobile",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
