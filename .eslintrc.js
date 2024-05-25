@@ -1,3 +1,5 @@
+const { jsx } = require('react/jsx-runtime');
+
 module.exports = {
   extends: ['expo', 'prettier'],
   plugins: ['prettier'],
@@ -9,6 +11,7 @@ module.exports = {
         printWidth: 80,
         tabWidth: 2,
         singleQuote: true,
+        jsxSingleQuote: true,
         trailingComma: 'all',
         arrowParens: 'always',
         semi: true,
