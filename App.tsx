@@ -24,7 +24,7 @@ export default function App() {
         translucent
       />
 
-      {fontsLoaded ? (
+      {!fontsLoaded ? (
         <Loading />
       ) : (
         <Box width="100%" flex={1} justifyContent="center" alignItems="center">
