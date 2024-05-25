@@ -43,10 +43,6 @@ export const gluestackUIConfig = createConfig({
       heading: 'Roboto_700Bold',
       body: 'Roboto_400Regular',
     },
-    sizes: {
-      14: 56,
-      33: 148,
-    },
     space: {
       px: '1px',
       '0': 0,
@@ -67,10 +63,12 @@ export const gluestackUIConfig = createConfig({
       '10': 40,
       '11': 44,
       '12': 48,
+      '14': 56,
       '16': 64,
       '20': 80,
       '24': 96,
       '32': 128,
+      '33': 148,
       '40': 160,
       '48': 192,
       '56': 224,
