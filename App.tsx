@@ -1,6 +1,4 @@
 import React from 'react';
-import { GluestackUIProvider } from '@gluestack-ui/themed';
-import { config } from './config/gluestack-ui.config';
 
 import {
   useFonts,
@@ -18,13 +16,11 @@ export default function App() {
   });
 
   return (
-    <GluestackUIProvider config={config}>
-      <StatusBar
-        barStyle='light-content'
-        backgroundColor='transparent'
-        translucent
-      />
-      {!fontsLoaded ? <Loading /> : <SignIn />}
-    </GluestackUIProvider>
+    <StatusBar
+      barStyle='light-content'
+      backgroundColor='transparent'
+      translucent
+    />
+    // {!fontsLoaded ? <Loading /> : <SignIn />}
   );
 }
