@@ -1,3 +1,62 @@
+import { Image, View } from 'react-native';
+import BackgroundImg from '@assets/background.png';
+import LogoSvg from '@assets/logo.svg';
+import { useAppTheme } from 'src/theme';
+import { Text } from 'react-native-paper';
+import { Center } from '@components/Center';
+import { Input } from '@components/Input';
+import { Button } from '@components/Button';
+
 export function SignIn() {
-  return;
+  const { colors, sizes, fontSizes, fonts } = useAppTheme();
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.gray700,
+        paddingHorizontal: 30,
+      }}
+    >
+      <Image
+        source={BackgroundImg}
+        alt='Pessoas treinando'
+        resizeMode='contain'
+        style={{ position: 'absolute' }}
+      />
+
+      <Center my={sizes[33]}>
+        <LogoSvg />
+
+        <Text
+          style={{
+            color: colors.gray100,
+            fontSize: fontSizes.sm,
+            fontFamily: fonts.body.fontFamily,
+          }}
+        >
+          Treine sua mente e o seu corpo.
+        </Text>
+      </Center>
+
+      <Center mb={10}>
+        <Text
+          style={{
+            fontSize: fontSizes.xl,
+            fontFamily: fonts.heading.fontFamily,
+            color: colors.gray100,
+          }}
+        >
+          Acesse a conta
+        </Text>
+      </Center>
+
+      <Input placeholder='Email' keyboardType='email-address' />
+      <Input placeholder='Senha' secureTextEntry />
+
+      <View style={{ marginTop: 5 }}>
+        <Button title='Acessar' isLoading={false} />
+      </View>
+    </View>
+  );
 }
