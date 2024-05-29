@@ -7,9 +7,10 @@ import {
 } from '@expo-google-fonts/roboto';
 import { Loading } from '@components/Loading';
 import { StatusBar } from 'react-native';
-import { SignIn } from '@screens/SignIn';
 import { PaperProvider } from 'react-native-paper';
 import { theme } from 'src/theme';
+import { SignUp } from '@screens/SignUp';
+import { SignIn } from '@screens/SignIn';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,7 +26,7 @@ export default function App() {
         translucent
       />
 
-      {!fontsLoaded ? <Loading /> : <SignIn />}
+      {!fontsLoaded ? <Loading /> : <SignUp />}
     </PaperProvider>
   );
 }
