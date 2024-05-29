@@ -21,6 +21,7 @@ export function Button({ title, isLoading, variant = 'primary' }: ButtonProps) {
         borderRadius: 6,
         justifyContent: 'center',
         height: sizes[14],
+        width: '100%',
         borderColor: variant === 'secondary' ? colors.green700 : 'transparent',
       }}
     >

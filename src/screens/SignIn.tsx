@@ -1,4 +1,4 @@
-import { Image, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import BackgroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
 import { useAppTheme } from 'src/theme';
@@ -11,52 +11,78 @@ export function SignIn() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.gray700,
-        paddingHorizontal: 30,
-      }}
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
     >
-      <Image
-        source={BackgroundImg}
-        alt='Pessoas treinando'
-        resizeMode='contain'
-        style={{ position: 'absolute' }}
-      />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.gray700,
+          paddingHorizontal: 30,
+        }}
+      >
+        <Image
+          source={BackgroundImg}
+          alt='Pessoas treinando'
+          resizeMode='contain'
+          style={{ position: 'absolute' }}
+        />
 
-      <Center my={sizes[33]}>
-        <LogoSvg />
+        <Center my={sizes[33]}>
+          <LogoSvg />
 
-        <Text
+          <Text
+            style={{
+              color: colors.gray100,
+              fontSize: fontSizes.sm,
+              fontFamily: fonts.body.fontFamily,
+            }}
+          >
+            Treine sua mente e o seu corpo.
+          </Text>
+        </Center>
+
+        <Center mb={10}>
+          <Text
+            style={{
+              fontSize: fontSizes.xl,
+              fontFamily: fonts.heading.fontFamily,
+              color: colors.gray100,
+            }}
+          >
+            Acesse a conta
+          </Text>
+        </Center>
+
+        <Input placeholder='Email' keyboardType='email-address' />
+        <Input placeholder='Senha' secureTextEntry />
+
+        <View style={{ marginTop: 5 }}>
+          <Button title='Acessar' isLoading={false} />
+        </View>
+
+        <View
           style={{
-            color: colors.gray100,
-            fontSize: fontSizes.sm,
-            fontFamily: fonts.body.fontFamily,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: sizes[14],
           }}
         >
-          Treine sua mente e o seu corpo.
-        </Text>
-      </Center>
+          <Text
+            style={{
+              color: colors.gray100,
+              fontSize: fontSizes.sm,
+              fontFamily: fonts.body.fontFamily,
+              marginBottom: 20,
+            }}
+          >
+            Ainda não tem acesso
+          </Text>
 
-      <Center mb={10}>
-        <Text
-          style={{
-            fontSize: fontSizes.xl,
-            fontFamily: fonts.heading.fontFamily,
-            color: colors.gray100,
-          }}
-        >
-          Acesse a conta
-        </Text>
-      </Center>
-
-      <Input placeholder='Email' keyboardType='email-address' />
-      <Input placeholder='Senha' secureTextEntry />
-
-      <View style={{ marginTop: 5 }}>
-        <Button title='Acessar' isLoading={false} />
+          <Button title='Cadastre-se' isLoading={false} variant='secondary' />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
