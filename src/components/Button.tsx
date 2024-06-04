@@ -5,18 +5,24 @@ type ButtonProps = {
   title: string;
   isLoading: boolean;
   variant?: 'primary' | 'secondary';
+  onPressed?: () => void;
 };
 
-export function Button({ title, isLoading, variant = 'primary' }: ButtonProps) {
+export function Button({
+  title,
+  isLoading,
+  variant = 'primary',
+  onPressed,
+}: ButtonProps) {
   const { colors, sizes } = useAppTheme();
 
   return (
     <PaperButton
       mode={variant === 'primary' ? 'contained' : 'outlined'}
-      onPress={() => {}}
       buttonColor={variant === 'primary' ? colors.green700 : 'transparent'}
       textColor={variant === 'primary' ? colors.white : colors.green700}
       loading={isLoading}
+      onPress={onPressed}
       style={{
         borderRadius: 6,
         justifyContent: 'center',

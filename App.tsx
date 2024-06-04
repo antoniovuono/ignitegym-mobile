@@ -9,8 +9,8 @@ import { Loading } from '@components/Loading';
 import { StatusBar } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { theme } from 'src/theme';
-import { SignUp } from '@screens/SignUp';
-import { SignIn } from '@screens/SignIn';
+
+import { Routes } from '@routes/index';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,7 +26,7 @@ export default function App() {
         translucent
       />
 
-      {!fontsLoaded ? <Loading /> : <SignUp />}
+      {!fontsLoaded ? <Loading /> : <Routes />}
     </PaperProvider>
   );
 }

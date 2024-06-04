@@ -6,9 +6,15 @@ import { Text } from 'react-native-paper';
 import { Center } from '@components/Center';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { useNavigation } from '@react-navigation/native';
 
 export function SignUp() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
+  const { goBack } = useNavigation();
+
+  function handleGoBack() {
+    goBack();
+  }
 
   return (
     <ScrollView
@@ -18,12 +24,12 @@ export function SignUp() {
       <View
         style={{
           flex: 1,
-          backgroundColor: colors.gray700,
           paddingHorizontal: 30,
         }}
       >
         <Image
           source={BackgroundImg}
+          defaultSource={BackgroundImg}
           alt='Pessoas treinando'
           resizeMode='contain'
           style={{ position: 'absolute' }}
@@ -70,7 +76,12 @@ export function SignUp() {
             marginTop: sizes[14],
           }}
         >
-          <Button title='Cadastre-se' isLoading={false} variant='secondary' />
+          <Button
+            title='Voltar para o login'
+            isLoading={false}
+            variant='secondary'
+            onPressed={handleGoBack}
+          />
         </View>
       </View>
     </ScrollView>

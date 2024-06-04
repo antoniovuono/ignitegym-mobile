@@ -6,9 +6,16 @@ import { Text } from 'react-native-paper';
 import { Center } from '@components/Center';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
 export function SignIn() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
+  const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleNewAccount() {
+    navigate('signUp');
+  }
 
   return (
     <ScrollView
@@ -18,12 +25,12 @@ export function SignIn() {
       <View
         style={{
           flex: 1,
-          backgroundColor: colors.gray700,
           paddingHorizontal: 30,
         }}
       >
         <Image
           source={BackgroundImg}
+          defaultSource={BackgroundImg}
           alt='Pessoas treinando'
           resizeMode='contain'
           style={{ position: 'absolute' }}
@@ -80,7 +87,12 @@ export function SignIn() {
             Ainda não tem acesso
           </Text>
 
-          <Button title='Cadastre-se' isLoading={false} variant='secondary' />
+          <Button
+            title='Criar conta'
+            isLoading={false}
+            variant='secondary'
+            onPressed={handleNewAccount}
+          />
         </View>
       </View>
     </ScrollView>
