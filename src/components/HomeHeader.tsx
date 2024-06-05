@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
+import { UserAvatar } from './UserAvatar';
 
 export function HomeHeader() {
   const { colors, fontSizes, fonts } = useAppTheme();
@@ -15,26 +16,30 @@ export function HomeHeader() {
         paddingHorizontal: 33,
       }}
     >
-      <View>
-        <Text
-          style={{
-            color: colors.gray100,
-            fontSize: fontSizes.md,
-            fontFamily: fonts.body.fontFamily,
-          }}
-        >
-          Olá,
-        </Text>
-        <Text
-          style={{
-            color: colors.gray100,
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <UserAvatar size={64} />
 
-            fontSize: fontSizes.md,
-            fontFamily: fonts.heading.fontFamily,
-          }}
-        >
-          Antonio!
-        </Text>
+        <View>
+          <Text
+            style={{
+              color: colors.gray100,
+              fontSize: fontSizes.md,
+              fontFamily: fonts.body.fontFamily,
+            }}
+          >
+            Olá,
+          </Text>
+          <Text
+            style={{
+              color: colors.gray100,
+
+              fontSize: fontSizes.md,
+              fontFamily: fonts.heading.fontFamily,
+            }}
+          >
+            Antonio!
+          </Text>
+        </View>
       </View>
     </View>
   );
