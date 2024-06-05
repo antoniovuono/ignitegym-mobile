@@ -1,10 +1,10 @@
-import { Center } from '@components/Center';
-import { Text } from 'react-native-paper';
+import { HomeHeader } from '@components/HomeHeader';
+import { View } from 'react-native';
 
 export function Home() {
   return (
-    <Center flex={1}>
-      <Text style={{ color: 'white' }}>Home</Text>
-    </Center>
+    <View style={{ flex: 1 }}>
+      <HomeHeader />
+    </View>
   );
 }
