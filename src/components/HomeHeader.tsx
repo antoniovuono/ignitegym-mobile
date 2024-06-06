@@ -1,7 +1,9 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 import { UserAvatar } from './UserAvatar';
+
+import { MaterialIcons } from '@expo/vector-icons';
 
 export function HomeHeader() {
   const { colors, fontSizes, fonts } = useAppTheme();
@@ -13,11 +15,13 @@ export function HomeHeader() {
         width: '100%',
         paddingTop: 64,
         paddingBottom: 26,
-        paddingHorizontal: 33,
+        paddingHorizontal: 35,
+        alignItems: 'center',
+        flexDirection: 'row',
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <UserAvatar size={64} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+        <UserAvatar size={64} borderWidth={33} />
 
         <View>
           <Text
@@ -41,6 +45,10 @@ export function HomeHeader() {
           </Text>
         </View>
       </View>
+
+      <TouchableOpacity>
+        <MaterialIcons name='logout' color={colors.gray200} size={28} />
+      </TouchableOpacity>
     </View>
   );
 }
