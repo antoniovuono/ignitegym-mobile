@@ -1,38 +1,44 @@
-import { Pressable, PressableProps } from 'react-native';
-import { Text } from 'react-native-paper';
+import { useState } from 'react';
+import { Button, Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 
-type Props = PressableProps & {
+type Props = {
   name: string;
 };
 
 export function Group({ name, ...rest }: Props) {
+  const [selected, setSelected] = useState(false);
   const { colors, fontSizes, fonts } = useAppTheme();
 
+  function handleSelected() {
+    setSelected((prevState) => !prevState);
+  }
+
   return (
-    <Pressable
-      {...rest}
-      style={{
+    <Button
+      mode={selected ? 'outlined' : 'contained'}
+      uppercase
+      onPressIn={handleSelected}
+      onPressOut={handleSelected}
+      buttonColor={colors.gray500}
+      textColor={colors.gray200}
+      contentStyle={{
+        justifyContent: 'center',
         height: 43,
         width: 96,
-        backgroundColor: colors.gray600,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 12,
+      }}
+      labelStyle={{
+        fontFamily: fonts.body.fontFamily,
+        fontSize: fontSizes.xs,
+        color: colors.gray200,
+      }}
+      style={{
         borderRadius: 4,
-        overflow: 'hidden',
+        marginLeft: 12,
+        borderColor: colors.green500,
       }}
     >
-      <Text
-        style={{
-          color: colors.gray200,
-          textTransform: 'uppercase',
-          fontFamily: fonts.heading.fontWeight,
-          fontSize: fontSizes.xs,
-        }}
-      >
-        {name}
-      </Text>
-    </Pressable>
+      {name}
+    </Button>
   );
 }

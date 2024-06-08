@@ -7,7 +7,15 @@ export function Home() {
     <View style={{ flex: 1 }}>
       <HomeHeader />
 
-      <Group name='costas' />
+      <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <Group name='costas' />
+        <Group name='ombro' />
+        <Group name='peito' />
+      </View>
     </View>
   );
 }
