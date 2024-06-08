@@ -1,25 +1,21 @@
-import { useState } from 'react';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 
 type Props = {
   name: string;
+  onPress?: () => void;
+  isActive: boolean;
 };
 
-export function Group({ name, ...rest }: Props) {
-  const [selected, setSelected] = useState(false);
+export function Group({ name, onPress, isActive, ...rest }: Props) {
   const { colors, fontSizes, fonts } = useAppTheme();
-
-  function handleSelected() {
-    setSelected((prevState) => !prevState);
-  }
 
   return (
     <Button
-      mode={selected ? 'outlined' : 'contained'}
+      {...rest}
+      mode={isActive ? 'outlined' : 'contained'}
       uppercase
-      onPressIn={handleSelected}
-      onPressOut={handleSelected}
+      onPress={onPress}
       buttonColor={colors.gray500}
       textColor={colors.gray200}
       contentStyle={{
@@ -30,7 +26,7 @@ export function Group({ name, ...rest }: Props) {
       labelStyle={{
         fontFamily: fonts.body.fontFamily,
         fontSize: fontSizes.xs,
-        color: colors.gray200,
+        color: isActive ? colors.green500 : colors.gray200,
       }}
       style={{
         borderRadius: 4,
