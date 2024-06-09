@@ -30,8 +30,8 @@ export function Group({ name, onPress, isActive, ...rest }: Props) {
       }}
       style={{
         borderRadius: 4,
-        marginLeft: 12,
         borderColor: colors.green500,
+        marginRight: 12,
       }}
     >
       {name}
