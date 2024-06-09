@@ -40,6 +40,20 @@ export function History() {
               {section.title}
             </Text>
           )}
+          contentContainerStyle={
+            exercises.length === 0 && { flex: 1, justifyContent: 'center' }
+          }
+          ListEmptyComponent={
+            <Text
+              style={{
+                color: colors.gray100,
+                textAlign: 'center',
+              }}
+            >
+              Não há exercícios registrados ainda. {'\n'}
+              Vamos treinar hoje ?
+            </Text>
+          }
         />
       </View>
     </>
