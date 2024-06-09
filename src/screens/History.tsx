@@ -1,10 +1,10 @@
-import { Center } from '@components/Center';
-import { Text } from 'react-native-paper';
+import { ScreenHeader } from '@components/ScreenHeader';
+import { View } from 'react-native';
 
 export function History() {
   return (
-    <Center flex={1}>
-      <Text style={{ color: 'white' }}>History</Text>
-    </Center>
+    <View style={{ flex: 1 }}>
+      <ScreenHeader title='Histórico de Exercícios' />
+    </View>
   );
 }
