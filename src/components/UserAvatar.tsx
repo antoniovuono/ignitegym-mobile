@@ -4,14 +4,15 @@ import { useAppTheme } from 'src/theme';
 type UserAvatarProps = {
   size?: number;
   borderWidth?: number;
+  url: string;
 };
 
-export function UserAvatar({ size, borderWidth }: UserAvatarProps) {
+export function UserAvatar({ size, borderWidth, url }: UserAvatarProps) {
   const { colors } = useAppTheme();
 
   return (
     <Avatar.Image
-      source={{ uri: 'https://github.com/antoniovuono.png' }}
+      source={{ uri: url }}
       size={size}
       style={{
         borderWidth: borderWidth,

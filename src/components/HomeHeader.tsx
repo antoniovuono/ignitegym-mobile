@@ -21,7 +21,11 @@ export function HomeHeader() {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-        <UserAvatar size={64} borderWidth={33} />
+        <UserAvatar
+          size={64}
+          borderWidth={33}
+          url='https://github.com/antoniovuono.png'
+        />
 
         <View>
           <Text
