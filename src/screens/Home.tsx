@@ -1,3 +1,4 @@
+import { ExerciseCard } from '@components/ExerciseCard';
 import { Group } from '@components/Group';
 import { HomeHeader } from '@components/HomeHeader';
 import { useState } from 'react';
@@ -13,31 +14,34 @@ export function Home() {
     'Ombro',
   ]);
   const [selectedGroup, setSelectedGroup] = useState('peito');
+  const [exercises, setExercises] = useState([
+    'Puxada frontal',
+    'Remada curvada',
+    'Remada unilateral',
+    'Levantamento terras',
+  ]);
 
   const { colors, fontSizes, fonts } = useAppTheme();
 
   return (
-    <View style={{ flex: 1 }}>
+    <>
       <HomeHeader />
-
-      <View
-        style={{
-          padding: 14,
-        }}
-      >
-        <FlatList
-          data={groups}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
-            <Group
-              name={item}
-              isActive={selectedGroup === item}
-              onPress={() => setSelectedGroup(item)}
-            />
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
+      <View style={{ flex: 1, padding: 14 }}>
+        <View>
+          <FlatList
+            data={groups}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <Group
+                name={item}
+                isActive={selectedGroup === item}
+                onPress={() => setSelectedGroup(item)}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
 
         <View
           style={{
@@ -64,10 +68,18 @@ export function Home() {
               fontFamily: fonts.body.fontFamily,
             }}
           >
-            4
+            {exercises.length}
           </Text>
         </View>
+
+        <FlatList
+          style={{ marginTop: 14 }}
+          data={exercises}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => <ExerciseCard />}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
-    </View>
+    </>
   );
 }
