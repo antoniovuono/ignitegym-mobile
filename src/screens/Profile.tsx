@@ -7,6 +7,7 @@ import { useAppTheme } from 'src/theme';
 import { useState } from 'react';
 import { Text } from 'react-native-paper';
 import { Input } from '@components/Input';
+import { Button } from '@components/Button';
 
 const PHOTO_SIZE = 148;
 
@@ -59,6 +60,35 @@ export function Profile() {
             placeholder='antoniosvuono@icloud.com'
             disabled
           />
+        </View>
+
+        <View
+          style={{
+            marginTop: 36,
+          }}
+        >
+          <Text
+            style={{
+              color: colors.gray200,
+              fontSize: fontSizes.md,
+              fontFamily: fonts.heading.fontFamily,
+              marginBottom: 10,
+            }}
+          >
+            Alterar Senha
+          </Text>
+
+          <Input type='secondary' placeholder='Senha antiga' secureTextEntry />
+          <Input type='secondary' placeholder='Nova senha' secureTextEntry />
+          <Input
+            type='secondary'
+            placeholder='Confirme a nova senha'
+            secureTextEntry
+          />
+        </View>
+
+        <View style={{ marginTop: 20 }}>
+          <Button title='Atualizar' isLoading={false} />
         </View>
       </ScrollView>
     </>
