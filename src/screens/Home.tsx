@@ -1,6 +1,8 @@
 import { ExerciseCard } from '@components/ExerciseCard';
 import { Group } from '@components/Group';
 import { HomeHeader } from '@components/HomeHeader';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { Text } from 'react-native-paper';
@@ -22,6 +24,11 @@ export function Home() {
   ]);
 
   const { colors, fontSizes, fonts } = useAppTheme();
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>();
+
+  function handleOpenExerciseDetails() {
+    navigate('exercise');
+  }
 
   return (
     <>
@@ -76,7 +83,9 @@ export function Home() {
           style={{ marginTop: 14 }}
           data={exercises}
           keyExtractor={(item) => item}
-          renderItem={({ item }) => <ExerciseCard />}
+          renderItem={({ item }) => (
+            <ExerciseCard onPress={handleOpenExerciseDetails} />
+          )}
           showsVerticalScrollIndicator={false}
         />
       </View>

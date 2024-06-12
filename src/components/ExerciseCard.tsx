@@ -1,13 +1,19 @@
-import { Image, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 import { Text } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 import { useAppTheme } from 'src/theme';
 
-export function ExerciseCard() {
+export function ExerciseCard({ ...rest }: TouchableOpacityProps) {
   const { colors, fonts, fontSizes } = useAppTheme();
 
   return (
     <TouchableOpacity
+      {...rest}
       style={{
         backgroundColor: colors.gray500,
         width: '100%',
