@@ -68,6 +68,7 @@ export function SignUp() {
           keyboardType='email-address'
         />
         <Input type='primary' placeholder='Senha' secureTextEntry />
+        <Input type='primary' placeholder='Confirmar Senha' secureTextEntry />
 
         <View style={{ marginTop: 5 }}>
           <Button title='Acessar' isLoading={false} />
