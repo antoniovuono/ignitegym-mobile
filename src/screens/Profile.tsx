@@ -1,19 +1,56 @@
 import { Center } from '@components/Center';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { UserAvatar } from '@components/UserAvatar';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Skeleton } from 'moti/skeleton';
 import { useAppTheme } from 'src/theme';
 import { useState } from 'react';
 import { Text } from 'react-native-paper';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 const PHOTO_SIZE = 148;
 
 export function Profile() {
   const [photoLoading, setPhotoLoading] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(
+    'https://github.com/antoniovuono.png',
+  );
+
   const { colors, fontSizes, fonts } = useAppTheme();
+
+  async function handleUserPhotoSelect() {
+    setPhotoLoading(true);
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+
+      if (photoSelected.canceled) return;
+
+      if (photoSelected.assets[0].uri) {
+        // usamos o fileSystem para checar o tamanho da imagem
+        const photoInfo = await FileSystem.getInfoAsync(
+          photoSelected.assets[0].uri,
+        );
+
+        if (photoInfo.exists && photoInfo.size / 1024 / 1024 > 5) {
+          Alert.alert('Erro', 'A imagem deve ter no máximo 5MB');
+        }
+
+        setUserPhoto(photoSelected.assets[0].uri);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPhotoLoading(false);
+    }
+  }
 
   return (
     <>
@@ -27,13 +64,10 @@ export function Profile() {
             radius='round'
             colors={[colors.gray500, colors.gray400]}
           >
-            <UserAvatar
-              url='https://github.com/antoniovuono.png'
-              size={PHOTO_SIZE}
-            />
+            <UserAvatar url={userPhoto} size={PHOTO_SIZE} />
           </Skeleton>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUserPhotoSelect}>
             <Text
               style={{
                 color: colors.green500,
