@@ -8,13 +8,8 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
-
-type FormDataProps = {
-  name: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-};
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SignUpSchema, SignUpSchemaTypes } from '@utils/schemas';
 
 export function SignUp() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
@@ -24,13 +19,17 @@ export function SignUp() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>({});
+  } = useForm<SignUpSchemaTypes>({
+    resolver: zodResolver(SignUpSchema),
+  });
+
+  console.log(errors.confirmPassword?.message);
 
   function handleGoBack() {
     goBack();
   }
 
-  function handleSignUp(data: FormDataProps) {
+  function handleSignUp(data: SignUpSchemaTypes) {
     console.log(data);
   }
 
@@ -128,13 +127,14 @@ export function SignUp() {
               secureTextEntry
               onChangeText={onChange}
               value={value}
+              errorMessage={errors.password?.message}
             />
           )}
         />
 
         <Controller
           control={control}
-          name='confirm_password'
+          name='confirmPassword'
           render={({ field: { onChange, value } }) => (
             <Input
               type='primary'
@@ -142,6 +142,7 @@ export function SignUp() {
               secureTextEntry
               onChangeText={onChange}
               value={value}
+              errorMessage={errors.confirmPassword?.message}
               onSubmitEditing={handleSubmit(handleSignUp)}
             />
           )}
