@@ -16,7 +16,7 @@ export function Input({ errorMessage, type, ...rest }: InputsProps) {
         {...rest}
         autoCapitalize='none'
         textColor={colors.white}
-        activeUnderlineColor={colors.green500}
+        activeUnderlineColor={errorMessage ? colors.red500 : colors.green500}
         underlineColor={colors.gray300}
         placeholderTextColor={colors.gray300}
         style={{
