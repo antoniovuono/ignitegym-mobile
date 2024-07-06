@@ -1,4 +1,4 @@
-import { Image, ScrollView, View } from 'react-native';
+import { Alert, Image, ScrollView, View } from 'react-native';
 import BackgroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
 import { useAppTheme } from 'src/theme';
@@ -10,6 +10,15 @@ import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpSchema, SignUpSchemaTypes } from '@utils/schemas';
+import { api } from '@services/api';
+import { AxiosError, isAxiosError } from 'axios';
+import { AppError } from '@utils/errors/AppError';
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export function SignUp() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
@@ -23,14 +32,24 @@ export function SignUp() {
     resolver: zodResolver(SignUpSchema),
   });
 
-  console.log(errors.confirmPassword?.message);
-
   function handleGoBack() {
     goBack();
   }
 
-  function handleSignUp(data: SignUpSchemaTypes) {
-    console.log(data);
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    try {
+      await api.post('/users', {
+        name,
+        email,
+        password,
+      });
+    } catch (error) {
+      if (error instanceof AppError) {
+        return Alert.alert(error.message);
+      }
+
+      return Alert.alert('Erro ao criar conta. Tente novamente.');
+    }
   }
 
   return (
