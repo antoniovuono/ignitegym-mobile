@@ -8,10 +8,33 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
+import { Controller, useForm } from 'react-hook-form';
+import { signInSchema, signInSchemaTypes } from '@utils/schemas/sign-in-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@hooks/useAuth';
+import { SignUpSchemaTypes } from '@utils/schemas/sign-up-schema';
+
+type FormDataProps = {
+  email: string;
+  password: string;
+};
 
 export function SignIn() {
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const { signIn } = useAuth();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signInSchemaTypes>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  async function handleSignIn({ email, password }: FormDataProps) {
+    await signIn(email, password);
+  }
 
   function handleNewAccount() {
     navigate('signUp');
@@ -62,15 +85,42 @@ export function SignIn() {
           </Text>
         </Center>
 
-        <Input
-          type='primary'
-          placeholder='Email'
-          keyboardType='email-address'
+        <Controller
+          control={control}
+          name='email'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              type='primary'
+              placeholder='Email'
+              keyboardType='email-address'
+              onChangeText={onChange}
+              value={value}
+              errorMessage={errors.email?.message}
+            />
+          )}
         />
-        <Input type='primary' placeholder='Senha' secureTextEntry />
+
+        <Controller
+          control={control}
+          name='password'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              type='primary'
+              placeholder='Senha'
+              secureTextEntry
+              onChangeText={onChange}
+              value={value}
+              errorMessage={errors.password?.message}
+            />
+          )}
+        />
 
         <View style={{ marginTop: 5 }}>
-          <Button title='Acessar' isLoading={false} />
+          <Button
+            title='Acessar'
+            isLoading={false}
+            onPressed={handleSubmit(handleSignIn)}
+          />
         </View>
 
         <View

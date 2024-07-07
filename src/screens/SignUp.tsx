@@ -9,9 +9,8 @@ import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignUpSchema, SignUpSchemaTypes } from '@utils/schemas';
+import { SignUpSchema, SignUpSchemaTypes } from '@utils/schemas/sign-up-schema';
 import { api } from '@services/api';
-import { AxiosError, isAxiosError } from 'axios';
 import { AppError } from '@utils/errors/AppError';
 
 type FormDataProps = {
@@ -100,9 +99,6 @@ export function SignUp() {
         <Controller
           control={control}
           name='name'
-          rules={{
-            required: 'Nome é obrigatório',
-          }}
           render={({ field: { onChange, value } }) => (
             <Input
               type='primary'
