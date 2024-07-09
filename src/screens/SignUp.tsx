@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpSchema, SignUpSchemaTypes } from '@utils/schemas/sign-up-schema';
 import { api } from '@services/api';
 import { AppError } from '@utils/errors/AppError';
+import { useState } from 'react';
+import { useAuth } from '@hooks/useAuth';
 
 type FormDataProps = {
   name: string;
@@ -20,8 +22,11 @@ type FormDataProps = {
 };
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
   const { goBack } = useNavigation();
+  const { signIn } = useAuth();
 
   const {
     control,
@@ -37,12 +42,17 @@ export function SignUp() {
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
     try {
+      setIsLoading(true);
       await api.post('/users', {
         name,
         email,
         password,
       });
+
+      await signIn(email, password);
     } catch (error) {
+      setIsLoading(false);
+
       if (error instanceof AppError) {
         return Alert.alert(error.message);
       }
@@ -166,7 +176,7 @@ export function SignUp() {
         <View style={{ marginTop: 5 }}>
           <Button
             title='Criar e Acessar'
-            isLoading={false}
+            isLoading={isLoading}
             onPressed={handleSubmit(handleSignUp)}
           />
         </View>
@@ -180,7 +190,6 @@ export function SignUp() {
         >
           <Button
             title='Voltar para o login'
-            isLoading={false}
             variant='secondary'
             onPressed={handleGoBack}
           />

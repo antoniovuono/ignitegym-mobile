@@ -1,4 +1,4 @@
-import { Image, ScrollView, View } from 'react-native';
+import { Alert, Image, ScrollView, View } from 'react-native';
 import BackgroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
 import { useAppTheme } from 'src/theme';
@@ -12,7 +12,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { signInSchema, signInSchemaTypes } from '@utils/schemas/sign-in-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@hooks/useAuth';
-import { SignUpSchemaTypes } from '@utils/schemas/sign-up-schema';
+import { AppError } from '@utils/errors/AppError';
+import { useState } from 'react';
 
 type FormDataProps = {
   email: string;
@@ -20,6 +21,8 @@ type FormDataProps = {
 };
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { colors, sizes, fontSizes, fonts } = useAppTheme();
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
   const { signIn } = useAuth();
@@ -33,7 +36,16 @@ export function SignIn() {
   });
 
   async function handleSignIn({ email, password }: FormDataProps) {
-    await signIn(email, password);
+    setIsLoading(true);
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert('Erro', error.message);
+      }
+      setIsLoading(false);
+      Alert.alert('Erro', 'Ocorreu um erro ao tentar fazer login');
+    }
   }
 
   function handleNewAccount() {
@@ -118,7 +130,7 @@ export function SignIn() {
         <View style={{ marginTop: 5 }}>
           <Button
             title='Acessar'
-            isLoading={false}
+            isLoading={isLoading}
             onPressed={handleSubmit(handleSignIn)}
           />
         </View>

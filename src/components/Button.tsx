@@ -3,7 +3,7 @@ import { useAppTheme } from 'src/theme';
 
 type ButtonProps = {
   title: string;
-  isLoading: boolean;
+  isLoading?: boolean;
   variant?: 'primary' | 'secondary';
   onPressed?: () => void;
 };

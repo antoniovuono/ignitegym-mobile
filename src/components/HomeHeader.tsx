@@ -4,9 +4,12 @@ import { useAppTheme } from 'src/theme';
 import { UserAvatar } from './UserAvatar';
 
 import { MaterialIcons } from '@expo/vector-icons';
+import { useAuth } from '@hooks/useAuth';
 
 export function HomeHeader() {
   const { colors, fontSizes, fonts } = useAppTheme();
+
+  const { user, signOut } = useAuth();
 
   return (
     <View
@@ -21,11 +24,7 @@ export function HomeHeader() {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-        <UserAvatar
-          size={64}
-          borderWidth={33}
-          url='https://github.com/antoniovuono.png'
-        />
+        <UserAvatar size={64} borderWidth={33} uri={user.avatar} />
 
         <View>
           <Text
@@ -45,12 +44,12 @@ export function HomeHeader() {
               fontFamily: fonts.heading.fontFamily,
             }}
           >
-            Antonio!
+            {user.name}!
           </Text>
         </View>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={signOut}>
         <MaterialIcons name='logout' color={colors.gray200} size={28} />
       </TouchableOpacity>
     </View>
