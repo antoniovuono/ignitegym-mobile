@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
-import { set } from 'zod';
 
 export function Home() {
   const [groups, setGroups] = useState<string[]>([]);
@@ -22,8 +21,8 @@ export function Home() {
   const { colors, fontSizes, fonts } = useAppTheme();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 
-  function handleOpenExerciseDetails() {
-    navigate('exercise');
+  function handleOpenExerciseDetails(exerciseId: string) {
+    navigate('exercise', { exerciseId });
   }
 
   async function fetchGroups() {
@@ -130,7 +129,10 @@ export function Home() {
               data={exercises}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <ExerciseCard onPress={handleOpenExerciseDetails} data={item} />
+                <ExerciseCard
+                  onPress={() => handleOpenExerciseDetails(item.id)}
+                  data={item}
+                />
               )}
               showsVerticalScrollIndicator={false}
             />

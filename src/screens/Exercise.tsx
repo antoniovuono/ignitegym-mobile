@@ -1,7 +1,7 @@
 import { TouchableOpacity, View, Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useAppTheme } from 'src/theme';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import BodySvg from '@assets/body.svg';
 import { Card, Text } from 'react-native-paper';
@@ -9,10 +9,18 @@ import SeriesSvg from '@assets/series.svg';
 import RepetitionsSvg from '@assets/repetitions.svg';
 import { Button } from '@components/Button';
 
+type RouteParamsProps = {
+  exerciseId: string;
+};
+
 export function Exercise() {
   const { colors, fontSizes, fonts } = useAppTheme();
 
   const { goBack } = useNavigation<AppNavigatorRoutesProps>();
+
+  const route = useRoute();
+
+  const { exerciseId } = route.params as RouteParamsProps;
 
   function handleGoBack() {
     goBack();
