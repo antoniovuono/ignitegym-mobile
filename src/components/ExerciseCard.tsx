@@ -7,8 +7,14 @@ import {
 import { Text } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 import { useAppTheme } from 'src/theme';
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
+import { api } from '@services/api';
 
-export function ExerciseCard({ ...rest }: TouchableOpacityProps) {
+type Props = TouchableOpacityProps & {
+  data: ExerciseDTO;
+};
+
+export function ExerciseCard({ data, ...rest }: Props) {
   const { colors, fonts, fontSizes } = useAppTheme();
 
   return (
@@ -27,7 +33,7 @@ export function ExerciseCard({ ...rest }: TouchableOpacityProps) {
     >
       <Image
         source={{
-          uri: 'https://uploads.metropoles.com/wp-content/uploads/2023/02/17143449/GettyImages-946365998-1.jpg',
+          uri: `${api.defaults.baseURL}/exercise/thumb/${data.thumb}`,
         }}
         width={67}
         height={67}
@@ -48,7 +54,7 @@ export function ExerciseCard({ ...rest }: TouchableOpacityProps) {
             fontSize: fontSizes.lg,
           }}
         >
-          Puxada frontal
+          {data.name}
         </Text>
         <Text
           style={{
@@ -58,7 +64,7 @@ export function ExerciseCard({ ...rest }: TouchableOpacityProps) {
             marginTop: 2,
           }}
         >
-          3 séries x 12 repetições
+          {data.series} séries x {data.repetitions} repetições
         </Text>
       </View>
 

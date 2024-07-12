@@ -1,27 +1,20 @@
 import { ExerciseCard } from '@components/ExerciseCard';
 import { Group } from '@components/Group';
 import { HomeHeader } from '@components/HomeHeader';
-import { useNavigation } from '@react-navigation/native';
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
-import { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { api } from '@services/api';
+import { AppError } from '@utils/errors/AppError';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 
 export function Home() {
-  const [groups, setGroups] = useState([
-    'Costas',
-    'Bíceps',
-    'Tríceps',
-    'Ombro',
-  ]);
+  const [groups, setGroups] = useState<string[]>([]);
   const [selectedGroup, setSelectedGroup] = useState('peito');
-  const [exercises, setExercises] = useState([
-    'Puxada frontal',
-    'Remada curvada',
-    'Remada unilateral',
-    'Levantamento terras',
-  ]);
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
 
   const { colors, fontSizes, fonts } = useAppTheme();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
@@ -29,6 +22,46 @@ export function Home() {
   function handleOpenExerciseDetails() {
     navigate('exercise');
   }
+
+  async function fetchGroups() {
+    try {
+      const response = await api.get('/groups');
+
+      setGroups(response.data);
+    } catch (error) {
+      const isAppError =
+        error instanceof AppError
+          ? error.message
+          : 'Não foi possível carregar os grupos de exercícios';
+
+      Alert.alert('Erro', isAppError);
+    }
+  }
+
+  async function fetchExercisesByGroup() {
+    try {
+      const response = await api.get(`/exercises/bygroup/${selectedGroup}`);
+
+      setExercises(response.data);
+    } catch (error) {
+      const isAppError =
+        error instanceof AppError
+          ? error.message
+          : 'Não foi possível carregar os exercícios';
+
+      Alert.alert('Erro', isAppError);
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercisesByGroup();
+    }, [selectedGroup]),
+  );
 
   return (
     <>
@@ -82,9 +115,9 @@ export function Home() {
         <FlatList
           style={{ marginTop: 14 }}
           data={exercises}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ExerciseCard onPress={handleOpenExerciseDetails} />
+            <ExerciseCard onPress={handleOpenExerciseDetails} data={item} />
           )}
           showsVerticalScrollIndicator={false}
         />
