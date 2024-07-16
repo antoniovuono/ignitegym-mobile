@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useAppTheme } from 'src/theme';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -8,12 +8,18 @@ import { Card, Text } from 'react-native-paper';
 import SeriesSvg from '@assets/series.svg';
 import RepetitionsSvg from '@assets/repetitions.svg';
 import { Button } from '@components/Button';
+import { AppError } from '@utils/errors/AppError';
+import { api } from '@services/api';
+import { useEffect, useState } from 'react';
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
 
 type RouteParamsProps = {
   exerciseId: string;
 };
 
 export function Exercise() {
+  const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
+
   const { colors, fontSizes, fonts } = useAppTheme();
 
   const { goBack } = useNavigation<AppNavigatorRoutesProps>();
@@ -25,6 +31,28 @@ export function Exercise() {
   function handleGoBack() {
     goBack();
   }
+
+  async function fetchExerciseDetails() {
+    try {
+      const response = await api.get(`/exercises/${exerciseId}`);
+
+      setExercise(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Erro ao buscar detalhes do exercício';
+
+      Alert.alert(title, 'Tente novamente mais tarde');
+    }
+  }
+
+  useEffect(() => {
+    if (exerciseId) {
+      fetchExerciseDetails();
+    }
+  }, [exerciseId]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -52,7 +80,7 @@ export function Exercise() {
               flexShrink: 1,
             }}
           >
-            Puxada frontal
+            {exercise.name}
           </Text>
         </View>
 
@@ -73,7 +101,7 @@ export function Exercise() {
               marginLeft: 4,
             }}
           >
-            Costas
+            {exercise.group}
           </Text>
         </View>
       </View>
@@ -81,7 +109,7 @@ export function Exercise() {
       <View style={{ padding: 14 }}>
         <Image
           source={{
-            uri: 'https://uploads.metropoles.com/wp-content/uploads/2023/02/17143449/GettyImages-946365998-1.jpg',
+            uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
           }}
           height={384}
           borderRadius={6}
