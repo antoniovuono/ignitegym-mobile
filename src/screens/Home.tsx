@@ -14,7 +14,7 @@ import { useAppTheme } from 'src/theme';
 
 export function Home() {
   const [groups, setGroups] = useState<string[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState('peito');
+  const [selectedGroup, setSelectedGroup] = useState('antebraço');
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

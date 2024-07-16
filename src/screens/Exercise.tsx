@@ -12,6 +12,7 @@ import { AppError } from '@utils/errors/AppError';
 import { api } from '@services/api';
 import { useEffect, useState } from 'react';
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
+import { Loading } from '@components/Loading';
 
 type RouteParamsProps = {
   exerciseId: string;
@@ -19,6 +20,7 @@ type RouteParamsProps = {
 
 export function Exercise() {
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { colors, fontSizes, fonts } = useAppTheme();
 
@@ -34,6 +36,7 @@ export function Exercise() {
 
   async function fetchExerciseDetails() {
     try {
+      setIsLoading(true);
       const response = await api.get(`/exercises/${exerciseId}`);
 
       setExercise(response.data);
@@ -45,6 +48,8 @@ export function Exercise() {
         : 'Erro ao buscar detalhes do exercício';
 
       Alert.alert(title, 'Tente novamente mais tarde');
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -56,120 +61,125 @@ export function Exercise() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          backgroundColor: colors.gray600,
-          paddingTop: 52,
-          paddingHorizontal: 32,
-          paddingBottom: 32,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <View>
-          <TouchableOpacity onPress={handleGoBack}>
-            <Feather name='arrow-left' size={24} color={colors.green500} />
-          </TouchableOpacity>
-          <Text
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <View
             style={{
-              color: colors.gray100,
-              fontSize: fontSizes.lg,
-              fontFamily: fonts.heading.fontFamily,
-              marginTop: 10,
-              flexShrink: 1,
-            }}
-          >
-            {exercise.name}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 10,
-          }}
-        >
-          <BodySvg />
-          <Text
-            style={{
-              color: colors.gray100,
-              fontSize: fontSizes.sm,
-              fontFamily: fonts.body.fontFamily,
-              marginLeft: 4,
-            }}
-          >
-            {exercise.group}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{ padding: 14 }}>
-        <Image
-          source={{
-            uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
-          }}
-          height={384}
-          borderRadius={6}
-          style={{
-            marginBottom: 16,
-          }}
-        />
-
-        <View>
-          <Card
-            contentStyle={{
               backgroundColor: colors.gray600,
-              borderRadius: 8,
-              padding: 16,
+              paddingTop: 52,
+              paddingHorizontal: 32,
+              paddingBottom: 32,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
-            <Card.Content
+            <View>
+              <TouchableOpacity onPress={handleGoBack}>
+                <Feather name='arrow-left' size={24} color={colors.green500} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  color: colors.gray100,
+                  fontSize: fontSizes.lg,
+                  fontFamily: fonts.heading.fontFamily,
+                  marginTop: 10,
+                  flexShrink: 1,
+                }}
+              >
+                {exercise.name}
+              </Text>
+            </View>
+
+            <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 24,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
               }}
             >
-              <Card.Content
-                style={{ flexDirection: 'row', alignItems: 'center' }}
+              <BodySvg />
+              <Text
+                style={{
+                  color: colors.gray100,
+                  fontSize: fontSizes.sm,
+                  fontFamily: fonts.body.fontFamily,
+                  marginLeft: 4,
+                }}
               >
-                <SeriesSvg />
-                <Text
+                {exercise.group}
+              </Text>
+            </View>
+          </View>
+          <View style={{ padding: 14 }}>
+            <Image
+              source={{
+                uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
+              }}
+              height={384}
+              borderRadius={6}
+              style={{
+                marginBottom: 16,
+              }}
+            />
+
+            <View>
+              <Card
+                contentStyle={{
+                  backgroundColor: colors.gray600,
+                  borderRadius: 8,
+                  padding: 16,
+                }}
+              >
+                <Card.Content
                   style={{
-                    color: colors.gray100,
-                    fontFamily: fonts.body.fontFamily,
-                    fontSize: fontSizes.md,
-                    marginLeft: 8,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginBottom: 24,
                   }}
                 >
-                  3 séries
-                </Text>
-              </Card.Content>
+                  <Card.Content
+                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                  >
+                    <SeriesSvg />
+                    <Text
+                      style={{
+                        color: colors.gray100,
+                        fontFamily: fonts.body.fontFamily,
+                        fontSize: fontSizes.md,
+                        marginLeft: 8,
+                      }}
+                    >
+                      3 séries
+                    </Text>
+                  </Card.Content>
 
-              <Card.Content
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-              >
-                <RepetitionsSvg />
-                <Text
-                  style={{
-                    color: colors.gray100,
-                    fontFamily: fonts.body.fontFamily,
-                    fontSize: fontSizes.md,
-                    marginLeft: 8,
-                  }}
-                >
-                  12 repetições
-                </Text>
-              </Card.Content>
-            </Card.Content>
+                  <Card.Content
+                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                  >
+                    <RepetitionsSvg />
+                    <Text
+                      style={{
+                        color: colors.gray100,
+                        fontFamily: fonts.body.fontFamily,
+                        fontSize: fontSizes.md,
+                        marginLeft: 8,
+                      }}
+                    >
+                      12 repetições
+                    </Text>
+                  </Card.Content>
+                </Card.Content>
 
-            <Button title='Marcar como realizado' isLoading={false} />
-          </Card>
-        </View>
-      </View>
+                <Button title='Marcar como realizado' isLoading={false} />
+              </Card>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 }
