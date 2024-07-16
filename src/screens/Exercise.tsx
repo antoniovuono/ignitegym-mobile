@@ -21,10 +21,11 @@ type RouteParamsProps = {
 export function Exercise() {
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
   const [isLoading, setIsLoading] = useState(true);
+  const [sendingRegister, setSendingRegister] = useState(true);
 
   const { colors, fontSizes, fonts } = useAppTheme();
 
-  const { goBack } = useNavigation<AppNavigatorRoutesProps>();
+  const { goBack, navigate } = useNavigation<AppNavigatorRoutesProps>();
 
   const route = useRoute();
 
@@ -50,6 +51,28 @@ export function Exercise() {
       Alert.alert(title, 'Tente novamente mais tarde');
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleExerciseHistoryRegister() {
+    try {
+      setSendingRegister(true);
+
+      await api.post('/history', { exercise_id: exerciseId });
+
+      Alert.alert('Exercício registrado com sucesso');
+
+      navigate('history');
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível registrar o exercício';
+
+      Alert.alert(title, 'Tente novamente mais tarde');
+    } finally {
+      setSendingRegister(false);
     }
   }
 
@@ -174,7 +197,11 @@ export function Exercise() {
                   </Card.Content>
                 </Card.Content>
 
-                <Button title='Marcar como realizado' isLoading={false} />
+                <Button
+                  title='Marcar como realizado'
+                  isLoading={sendingRegister}
+                  onPressed={handleExerciseHistoryRegister}
+                />
               </Card>
             </View>
           </View>
