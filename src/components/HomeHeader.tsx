@@ -2,9 +2,10 @@ import { TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 import { UserAvatar } from './UserAvatar';
-
+import { api } from '@services/api';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
 
 export function HomeHeader() {
   const { colors, fontSizes, fonts } = useAppTheme();
@@ -24,7 +25,15 @@ export function HomeHeader() {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-        <UserAvatar size={64} borderWidth={33} uri={user.avatar} />
+        <UserAvatar
+          size={64}
+          borderWidth={33}
+          uri={
+            user.avatar
+              ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+              : defaultUserPhotoImg
+          }
+        />
 
         <View>
           <Text

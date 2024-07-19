@@ -1,23 +1,44 @@
 import { HistoryCard } from '@components/HistoryCard';
 import { ScreenHeader } from '@components/ScreenHeader';
-import { useState } from 'react';
-import { SectionList, View } from 'react-native';
+import { HistoryByDayDTO } from '@dtos/HistoryByDayDTO';
+import { HistoryDTO } from '@dtos/HistoryDTO';
+import { useFocusEffect } from '@react-navigation/native';
+import { api } from '@services/api';
+import { AppError } from '@utils/errors/AppError';
+import { useCallback, useState } from 'react';
+import { Alert, SectionList, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 
 export function History() {
-  const [exercises, setExercises] = useState([
-    {
-      title: '26.08.22',
-      data: ['Puxada frontal', 'Remada unilateral'],
-    },
-    {
-      title: '27.08.22',
-      data: ['Puxada frontal'],
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [exercises, setExercises] = useState<HistoryByDayDTO[]>([]);
 
   const { colors, fontSizes, fonts } = useAppTheme();
+
+  async function fetchHistory() {
+    try {
+      setIsLoading(true);
+      const response = await api.get('/history');
+
+      setExercises(response.data);
+    } catch (error) {
+      const isAppError =
+        error instanceof AppError
+          ? error.message
+          : 'Não foi possível carregar o histórico';
+
+      Alert.alert('Erro', isAppError);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchHistory();
+    }, []),
+  );
 
   return (
     <>
@@ -25,8 +46,8 @@ export function History() {
       <View style={{ flex: 1, padding: 14 }}>
         <SectionList
           sections={exercises}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => <HistoryCard />}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <HistoryCard data={item} />}
           renderSectionHeader={({ section }) => (
             <Text
               style={{

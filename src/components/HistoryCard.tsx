@@ -1,8 +1,13 @@
+import { HistoryDTO } from '@dtos/HistoryDTO';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from 'src/theme';
 
-export function HistoryCard() {
+type Props = {
+  data: HistoryDTO;
+};
+
+export function HistoryCard({ data }: Props) {
   const { fontSizes, colors } = useAppTheme();
 
   return (
@@ -26,7 +31,7 @@ export function HistoryCard() {
             textTransform: 'capitalize',
           }}
         >
-          Costas
+          {data.group}
         </Text>
         <Text
           numberOfLines={1}
@@ -36,7 +41,7 @@ export function HistoryCard() {
             textTransform: 'capitalize',
           }}
         >
-          Puxada frontal
+          {data.name}
         </Text>
       </View>
 
@@ -46,7 +51,7 @@ export function HistoryCard() {
           fontSize: fontSizes.md,
         }}
       >
-        08:56
+        {data.hour}
       </Text>
     </View>
   );

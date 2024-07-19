@@ -10,16 +10,43 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import { useAuth } from '@hooks/useAuth';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { updatedProfileSchema } from '@utils/schemas/updated-profile-schema';
+import { AppError } from '@utils/errors/AppError';
+import { api } from '@services/api';
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
 
 const PHOTO_SIZE = 148;
 
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  old_password: string;
+  confirm_password: string;
+};
+
 export function Profile() {
   const [photoLoading, setPhotoLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    'https://github.com/antoniovuono.png',
-  );
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user, updateUserProfile } = useAuth();
   const { colors, fontSizes, fonts } = useAppTheme();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user?.name,
+      email: user?.email,
+    },
+    resolver: zodResolver(updatedProfileSchema),
+  });
 
   async function handleUserPhotoSelect() {
     setPhotoLoading(true);
@@ -43,12 +70,62 @@ export function Profile() {
           Alert.alert('Erro', 'A imagem deve ter no máximo 5MB');
         }
 
-        setUserPhoto(photoSelected.assets[0].uri);
+        const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+
+        const photoFile = {
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any;
+
+        const userPhotoUploadForm = new FormData();
+        userPhotoUploadForm.append('photo', photoFile);
+
+        const avatarUpdatedResponse = await api.patch(
+          '/users/avatar',
+          userPhotoUploadForm,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+
+        const userUpdated = user;
+
+        userUpdated.avatar = avatarUpdatedResponse.data.avatar;
+
+        await updateUserProfile(userUpdated);
+
+        Alert.alert('Sucesso', 'Foto de perfil atualizada com sucesso');
       }
     } catch (error) {
       console.error(error);
     } finally {
       setPhotoLoading(false);
+    }
+  }
+
+  async function handleProfileUpdate(data: FormDataProps) {
+    try {
+      setIsLoading(true);
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
+      await api.put('/users', data);
+
+      await updateUserProfile(userUpdated);
+
+      Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível atualizar os dados. Tente novamente mais tarde.';
+
+      Alert.alert('Erro', title);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -64,7 +141,14 @@ export function Profile() {
             radius='round'
             colors={[colors.gray500, colors.gray400]}
           >
-            <UserAvatar url={userPhoto} size={PHOTO_SIZE} />
+            <UserAvatar
+              uri={
+                user.avatar
+                  ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+                  : defaultUserPhotoImg
+              }
+              size={PHOTO_SIZE}
+            />
           </Skeleton>
 
           <TouchableOpacity onPress={handleUserPhotoSelect}>
@@ -87,12 +171,32 @@ export function Profile() {
             marginTop: 36,
           }}
         >
-          <Input type='secondary' placeholder='Antonio Sampaio De Vuono' />
+          <Controller
+            control={control}
+            name='name'
+            render={({ field: { value, onChange } }) => (
+              <Input
+                type='secondary'
+                placeholder='Nome'
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.name?.message}
+              />
+            )}
+          />
 
-          <Input
-            type='secondary'
-            placeholder='antoniosvuono@icloud.com'
-            disabled
+          <Controller
+            control={control}
+            name='email'
+            render={({ field: { value, onChange } }) => (
+              <Input
+                type='secondary'
+                placeholder='Email'
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
         </View>
 
@@ -112,17 +216,54 @@ export function Profile() {
             Alterar Senha
           </Text>
 
-          <Input type='secondary' placeholder='Senha antiga' secureTextEntry />
-          <Input type='secondary' placeholder='Nova senha' secureTextEntry />
-          <Input
-            type='secondary'
-            placeholder='Confirme a nova senha'
-            secureTextEntry
+          <Controller
+            control={control}
+            name='old_password'
+            render={({ field: { onChange } }) => (
+              <Input
+                type='secondary'
+                placeholder='Senha antiga'
+                secureTextEntry
+                onChangeText={onChange}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name='password'
+            render={({ field: { onChange } }) => (
+              <Input
+                type='secondary'
+                placeholder='Nova senha'
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name='confirm_password'
+            render={({ field: { onChange } }) => (
+              <Input
+                type='secondary'
+                placeholder='Confirme a nova senha'
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.confirm_password?.message}
+              />
+            )}
           />
         </View>
 
         <View style={{ marginTop: 20 }}>
-          <Button title='Atualizar' isLoading={false} />
+          <Button
+            title='Atualizar'
+            isLoading={isLoading}
+            onPressed={handleSubmit(handleProfileUpdate)}
+          />
         </View>
       </ScrollView>
     </>
